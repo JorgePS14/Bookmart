@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=flask,python,visualstudiocode
 
 .env
-.vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
