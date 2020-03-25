@@ -1,2 +1,18 @@
-# Bookmart
-Web development laboratory and cloud computing course project
+# Bookmart-back
+
+## Get the server running
+
+type
+
+```
+flask run
+```
+
+
+### Prerequisites
+
+```
+flask
+pip3
+
+```
