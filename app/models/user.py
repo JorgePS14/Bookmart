@@ -9,7 +9,7 @@ class User(db.Model):
     location = db.Column(db.String(45))
     university = db.Column(db.String(45))
     semester = db.Column(db.Integer)
-    major = db.String(db.String(45))
+    major = db.Column(db.String(45))
 
     def __init__(self, email, password, username, location, university,
                  semester, major):

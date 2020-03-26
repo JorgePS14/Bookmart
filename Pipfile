@@ -10,6 +10,9 @@ flask = "*"
 python-dotenv = "*"
 flask-sqlalchemy = "*"
 flask-mysqldb = "*"
+flask-restful = "*"
+flask-cors = "*"
+flask-ajax = "*"
 
 [requires]
 python_version = "3.7"
