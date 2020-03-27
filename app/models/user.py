@@ -8,8 +8,12 @@ class User(db.Model):
     location = db.Column(db.String(45))
     university = db.Column(db.String(45))
     semester = db.Column(db.Integer)
+<<<<<<< HEAD
+    major = db.Column(db.String(45))
+=======
     major = db.String(db.String(45))
     listings = db.relationship('Listing', backref='user', lazy=True)
+>>>>>>> master
 
     def __init__(self, email, password, username, location, university,
                  semester, major):
