@@ -55,7 +55,7 @@ def create_app():
 app = create_app()
 db = SQLAlchemy(app)
 
-from app.models import user
+from app.models import user, book, listing
 
 db.create_all()
 db.session.commit()

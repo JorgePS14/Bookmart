@@ -1,0 +1,19 @@
+from app import db
+
+class Listing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    photo = db.Column(db.LargeBinary(45), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    condition = db.Column(db.Integer, nullable=False)
+    no_available = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, photo, description, condition, no_available, price,
+                 semester, major):
+        self.photo = photo
+        self.description = description
+        self.condition = condition
+        self.no_available = no_available
+        self.price = price
