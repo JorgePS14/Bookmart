@@ -11,11 +11,8 @@ flask = "*"
 python-dotenv = "*"
 flask-sqlalchemy = "*"
 flask-mysqldb = "*"
-<<<<<<< HEAD
 flask-cors = "*"
-=======
 mysqlclient = "*"
->>>>>>> master
 
 [requires]
 python_version = "3.7"
