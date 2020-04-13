@@ -7,11 +7,10 @@ class Listing(db.Model):
     condition = db.Column(db.Integer, nullable=False)
     no_available = db.Column(db.Integer)
     price = db.Column(db.Float)
-    user_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
-    def __init__(self, photo, description, condition, no_available, price,
-                 semester, major):
+    def __init__(self, photo, description, condition, no_available, price, user_id, book_id):
         self.photo = photo
         self.description = description
         self.condition = condition
