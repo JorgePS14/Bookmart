@@ -1,12 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+db = SQLAlchemy()
+from .routes import user_blueprint
 
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
-    app.config.from_pyfile('settings.py')
-
+    app.config.from_pyfile('config.py')
     app.config['SQLALCHEMY_DATABASE_URI'] = '%s://%s:%s@%s/%s' % (
         app.config.get("DB_CONNECTION"),
         app.config.get("DB_USERNAME"),
@@ -14,20 +17,17 @@ def create_app():
         app.config.get("DB_HOST"),
         app.config.get("DB_NAME"),
     )
-
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    @app.route('/')
-    def index():
-        return "<h1>Back end</h1>"
+    # Initialize plugins
+    db.init_app(app)
 
-    return app
+    with app.app_context():
+        from app.models import user, book, listing
 
+        db.create_all()
+        db.session.commit()
 
-app = create_app()
-db = SQLAlchemy(app)
+        app.register_blueprint(user_blueprint)
 
-from app.models import user, book, listing
-
-db.create_all()
-db.session.commit()
+        return app
