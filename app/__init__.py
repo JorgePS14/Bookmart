@@ -45,6 +45,23 @@ def addBook():
         return '<h1>Book added</h1>'
     return '<h1>Add book endpoint -- Try using Postman</h1>'
 
+@app.route('/addUser', methods=['GET','POST'])
+def addUser():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        username = request.form["username"]
+        location = request.form["location"]
+        university = request.form["university"]
+        semester = int(request.form["semester"])
+        major = request.form["major"]
+        from app.models import user
+        user = user.User(email = email, password = password, username = username, location = location, university = university, semester = semester, major = major)
+        db.session.add(user)
+        db.session.commit()
+        return '<h1>User added</h1>'
+    return '<h1>Add user endpoint -- Try using Postman</h1>'
+
 @app.route('/addListing', methods=['GET','POST'])
 def addListing():
     if request.method == "POST":
@@ -54,8 +71,8 @@ def addListing():
         condition = int(request.form["condition"])
         no_available = int(request.form["no_available"])
         price = float(request.form["price"])
-        user_id = request.form["user_id"]
-        book_id = request.form["book_id"]
+        user_id = int(request.form["user_id"])
+        book_id = int(request.form["book_id"])
         from app.models import listing
         listing = listing.Listing(photo = photo, description = description, condition = condition, no_available = no_available, price = price, user_id = user_id, book_id = book_id)
         db.session.add(listing)
