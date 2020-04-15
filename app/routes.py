@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from .models.user import User
+from .models.book import Book
 from .models.listing import Listing
 from app import db
 
