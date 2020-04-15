@@ -4,9 +4,9 @@ from .models.book import Book
 from .models.listing import Listing
 from app import db
 
-
 user_blueprint = Blueprint("user_blueprint", __name__)
-
+book_blueprint = Blueprint("book_blueprint", __name__)
+listing_blueprint = Blueprint("listing_blueprint", __name__)
 
 @user_blueprint.route('/')
 def index():
@@ -26,10 +26,13 @@ def addUser():
         )
         db.session.add(user)
         db.session.commit()
-        return '<h1>User added</h1>'
-    return '<h1>API/User endpoint -- Try using Postman</h1>'
+        return 'OK', 200
+    
+    message = {'Endpoint' : 'Add User',
+                'Description' : 'Used to register user in db'}
+    return jsonify(message)
 
-@user_blueprint.route('/api/book', methods=['GET','POST'])
+@book_blueprint.route('/api/book', methods=['GET','POST'])
 def addBook():
     if request.method == "POST":
         book = Book(
@@ -41,10 +44,13 @@ def addBook():
         )
         db.session.add(book)
         db.session.commit()
-        return '<h1>Book added</h1>'
-    return '<h1>Add book endpoint -- Try using Postman</h1>'
+        return 'OK', 200
 
-@user_blueprint.route('/api/listing', methods=['GET','POST'])
+    message = {'Endpoint' : 'Add Book',
+                'Description' : 'Used to register book in db'}
+    return jsonify(message)
+
+@listing_blueprint.route('/api/listing', methods=['GET','POST'])
 def addListing():
     if request.method == "POST":
         photo = request.files["photo"]
@@ -60,5 +66,8 @@ def addListing():
         )
         db.session.add(listing)
         db.session.commit()
-        return '<h1>Listing added</h1>'
-    return '<h1>Add listing endpoint -- Try using Postman</h1>'
+        return 'OK', 200
+
+    message = {'Endpoint' : 'Add Listing',
+                'Description' : 'Used to register listing in db'}
+    return jsonify(message)

@@ -10,7 +10,8 @@ class Listing(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
-    def __init__(self, photo, description, condition, no_available, price, user_id, book_id):
+    def __init__(self, photo, description, condition, no_available, 
+                price, user_id, book_id):
         self.photo = photo
         self.description = description
         self.condition = condition
