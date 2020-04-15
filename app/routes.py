@@ -15,14 +15,15 @@ def index():
 @user_blueprint.route('/api/user', methods=['GET','POST'])
 def addUser():
     if request.method == "POST":
+        user_data = request.get_json()
         user = User(
-            request.form["email"],
-            request.form["password"],
-            request.form["username"],
-            request.form["location"],
-            request.form["university"],
-            int(request.form["semester"]),
-            request.form["major"]
+            user_data["email"],
+            user_data["password"],
+            user_data["username"],
+            user_data["location"],
+            user_data["university"],
+            user_data["semester"],
+            user_data["major"]
         )
         db.session.add(user)
         db.session.commit()
@@ -35,12 +36,13 @@ def addUser():
 @book_blueprint.route('/api/book', methods=['GET','POST'])
 def addBook():
     if request.method == "POST":
+        book_data = request.get_json()
         book = Book(
-            request.form["name"],
-            request.form["author"],
-            int(request.form["edition"]),
-            float(request.form["value"]),
-            request.form["isbn"]
+            book_data["name"],
+            book_data["author"],
+            int(book_data["edition"]),
+            float(book_data["value"]),
+            book_data["isbn"]
         )
         db.session.add(book)
         db.session.commit()
@@ -53,16 +55,19 @@ def addBook():
 @listing_blueprint.route('/api/listing', methods=['GET','POST'])
 def addListing():
     if request.method == "POST":
+
         photo = request.files["photo"]
         photo = photo.read()
+        listing_data = request.get_json()
+
         listing = Listing(
             photo,
-            request.form["description"],
-            int(request.form["condition"]),
-            int(request.form["no_available"]),
-            float(request.form["price"]),
-            int(request.form["user_id"]),
-            int(request.form["book_id"])
+            listing_data["description"],
+            int(listing_data["condition"]),
+            int(listing_data["no_available"]),
+            float(listing_data["price"]),
+            int(listing_data["user_id"]),
+            int(listing_data["book_id"])
         )
         db.session.add(listing)
         db.session.commit()
