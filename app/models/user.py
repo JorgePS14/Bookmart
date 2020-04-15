@@ -1,5 +1,6 @@
 from app import db
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(45), unique=True, nullable=False)
@@ -8,7 +9,7 @@ class User(db.Model):
     location = db.Column(db.String(45))
     university = db.Column(db.String(45))
     semester = db.Column(db.Integer)
-    major = db.String(db.String(45))
+    major = db.Column(db.String(45))
     listings = db.relationship('Listing', backref='user', lazy=True)
 
     def __init__(self, email, password, username, location, university,
