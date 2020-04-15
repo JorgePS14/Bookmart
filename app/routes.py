@@ -11,29 +11,53 @@ user_blueprint = Blueprint("user_blueprint", __name__)
 def index():
     return "<h1>Back end</h1>"
 
-
-@user_blueprint.route("/api/user", methods=["POST", "GET"])
-def updateUser():
-    # POST request
-    if request.method == 'POST':
-        user_data = request.get_json()
-        print(request.get_json())
-        new_user = User(
-            user_data["email"],
-            user_data["password"],
-            user_data["username"],
-            user_data["location"],
-            user_data["university"],
-            user_data["semester"],
-            user_data["major"]
+@user_blueprint.route('/api/user', methods=['GET','POST'])
+def addUser():
+    if request.method == "POST":
+        user = User(
+            request.form["email"],
+            request.form["password"],
+            request.form["username"],
+            request.form["location"],
+            request.form["university"],
+            int(request.form["semester"]),
+            request.form["major"]
         )
-
-        db.session.add(new_user)
+        db.session.add(user)
         db.session.commit()
+        return '<h1>User added</h1>'
+    return '<h1>API/User endpoint -- Try using Postman</h1>'
 
-        return 'OK', 200
+@user_blueprint.route('/api/book', methods=['GET','POST'])
+def addBook():
+    if request.method == "POST":
+        book = Book(
+            request.form["name"],
+            request.form["author"],
+            int(request.form["edition"]),
+            float(request.form["value"]),
+            request.form["isbn"]
+        )
+        db.session.add(book)
+        db.session.commit()
+        return '<h1>Book added</h1>'
+    return '<h1>Add book endpoint -- Try using Postman</h1>'
 
-    # GET request
-    elif request.method == 'GET':
-        message = {'greeting': 'Hello from flask'}
-        return jsonify(message)
+@user_blueprint.route('/api/listing', methods=['GET','POST'])
+def addListing():
+    if request.method == "POST":
+        photo = request.files["photo"]
+        photo = photo.read()
+        listing = Listing(
+            photo,
+            request.form["description"],
+            int(request.form["condition"]),
+            int(request.form["no_available"]),
+            float(request.form["price"]),
+            int(request.form["user_id"]),
+            int(request.form["book_id"])
+        )
+        db.session.add(listing)
+        db.session.commit()
+        return '<h1>Listing added</h1>'
+    return '<h1>Add listing endpoint -- Try using Postman</h1>'
