@@ -1,12 +1,14 @@
 from flask import request, jsonify, Blueprint
 from .models.user import User
 from .models.book import Book
+from .models.request import Request
 from .models.listing import Listing
 from app import db
 
 user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
+request_blueprint = Blueprint("request_blueprint", __name__)
 
 @user_blueprint.route('/')
 def index():
@@ -75,4 +77,23 @@ def addListing():
 
     message = {'Endpoint' : 'Add Listing',
                 'Description' : 'Used to register listing in db'}
+    return jsonify(message)
+
+@request_blueprint.route('/api/request', methods=['GET','POST'])
+def addRequest():
+    if request.method == "POST":
+        request_data = request.get_json()
+
+        request = Request(
+            int(request_data["condition"]),
+            float(request_data["money"]),
+            int(request_data["user_id"]),
+            int(request_data["book_id"])
+        )
+        db.session.add(request)
+        db.session.commit()
+        return 'OK', 200
+
+    message = {'Endpoint' : 'Add Request',
+                'Description' : 'Used to register request in db'}
     return jsonify(message)

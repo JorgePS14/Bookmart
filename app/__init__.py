@@ -28,5 +28,7 @@ def create_app():
         db.session.commit()
 
         app.register_blueprint(user_blueprint)
+        app.register_blueprint(book_blueprint)
+        app.register_blueprint(listing_blueprint)
         
         return app
