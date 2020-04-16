@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 db = SQLAlchemy()
-from .routes import user_blueprint
+from .routes import user_blueprint, book_blueprint, listing_blueprint
 
 def create_app():
     app = Flask(__name__)
@@ -28,5 +28,7 @@ def create_app():
         db.session.commit()
 
         app.register_blueprint(user_blueprint)
+        app.register_blueprint(book_blueprint)
+        app.register_blueprint(listing_blueprint)
         
         return app
