@@ -18,8 +18,8 @@ chat_blueprint = Blueprint("chat_blueprint", __name__)
 def index():
     return "<h1>Back end</h1>"
 
-@user_blueprint.route('/api/user', methods=['GET','POST'])
-def addUser():
+@user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
+def userMethods():
     if request.method == "POST":
         user_data = request.get_json()
         user = User(
@@ -35,12 +35,24 @@ def addUser():
         db.session.commit()
         return 'OK', 200
     
-    message = {'Endpoint' : 'Add User',
-                'Description' : 'Used to register user in db'}
+    if request.method == "DELETE":
+        user_data = request.get_json()
+
+        uid = user_data['id']
+
+        delUser = User.query.filter_by(id = uid).first()
+
+        if delUser:
+            db.session.delete(delUser)
+            db.session.commit()
+            return 'OK', 200
+
+    message = {'Endpoint' : 'User',
+                'Description' : 'Used to register/edit/delete user in db'}
     return jsonify(message)
 
 @book_blueprint.route('/api/book', methods=['GET','POST'])
-def addBook():
+def bookMethods():
     if request.method == "POST":
         book_data = request.get_json()
         book = Book(
@@ -54,12 +66,26 @@ def addBook():
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint' : 'Add Book',
-                'Description' : 'Used to register book in db'}
+    if request.method == "DELETE":
+        book_data = request.get_json()
+
+        bid = book_data['id']
+
+        delBook = Book.query.filter_by(id = bid).first()
+
+        if delBook:
+            db.session.delete(delBook)
+            db.session.commit()
+            return 'OK', 200
+        
+        return 'Internal Server Error', 500
+
+    message = {'Endpoint' : 'Book',
+                'Description' : 'Used to register/edit/delete book in db'}
     return jsonify(message)
 
 @listing_blueprint.route('/api/listing', methods=['GET','POST'])
-def addListing():
+def listingMethods():
     if request.method == "POST":
 
         photo = request.files["photo"]
@@ -79,12 +105,26 @@ def addListing():
         db.session.commit()
         return 'OK', 200
 
+    if request.method == "DELETE":
+        listing_data = request.get_json()
+
+        lid = listing_data['id']
+
+        delListing = Listing.query.filter_by(id = lid).first()
+
+        if delListing:
+            db.session.delete(delListing)
+            db.session.commit()
+            return 'OK', 200
+        
+        return 'Internal Server Error', 500
+
     message = {'Endpoint' : 'Add Listing',
-                'Description' : 'Used to register listing in db'}
+                'Description' : 'Used to register/edit/delete listing in db'}
     return jsonify(message)
 
 @request_blueprint.route('/api/request', methods=['GET','POST'])
-def addRequest():
+def requestMethods():
     if request.method == "POST":
         request_data = request.get_json()
 
@@ -98,16 +138,30 @@ def addRequest():
         db.session.commit()
         return 'OK', 200
 
+    if request.method == "DELETE":
+        req_data = request.get_json()
+
+        rid = req_data['id']
+
+        delRequest = User.query.filter_by(id = rid).first()
+
+        if delRequest:
+            db.session.delete(delRequest)
+            db.session.commit()
+            return 'OK', 200
+        
+        return 'Internal Server Error', 500
+
     message = {'Endpoint' : 'Add Request',
-                'Description' : 'Used to register request in db'}
+                'Description' : 'Used to register/edit/delete request in db'}
     return jsonify(message)
 
 @chat_blueprint.route('api/chat', methods=['GET', 'POST'])
 def createChat():
-    if request.method == 'POST':
+    if request.method == "POST":
         chat_data = request.get_json()
 
         chat = Chat()
         chat_id = chat.id
 
-        pass
+        pass #TODO
