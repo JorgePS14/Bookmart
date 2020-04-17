@@ -7,8 +7,8 @@ class Message(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     chat_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
-    def __init__(self, condition, money, user_id, book_id):
-        self.condition = condition
-        self.money = money
+    def __init__(self, message, time, user_id, chat_id):
+        self.message = message
+        self.time = time
         self.user_id = user_id
-        self.book_id = book_id
+        self.chat_id = chat_id
