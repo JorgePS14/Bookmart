@@ -3,12 +3,16 @@ from .models.user import User
 from .models.book import Book
 from .models.request import Request
 from .models.listing import Listing
+from .models.chat import Chat
+from .models.userchat import UserChat
+from .models.message import Message
 from app import db
 
 user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 request_blueprint = Blueprint("request_blueprint", __name__)
+chat_blueprint = Blueprint("chat_blueprint", __name__)
 
 @user_blueprint.route('/')
 def index():
@@ -84,16 +88,26 @@ def addRequest():
     if request.method == "POST":
         request_data = request.get_json()
 
-        request = Request(
+        req = Request(
             int(request_data["condition"]),
             float(request_data["money"]),
             int(request_data["user_id"]),
             int(request_data["book_id"])
         )
-        db.session.add(request)
+        db.session.add(req)
         db.session.commit()
         return 'OK', 200
 
     message = {'Endpoint' : 'Add Request',
                 'Description' : 'Used to register request in db'}
     return jsonify(message)
+
+@chat_blueprint.route('api/chat', methods=['GET', 'POST'])
+def createChat():
+    if request.method == 'POST':
+        chat_data = request.get_json()
+
+        chat = Chat()
+        chat_id = chat.id
+
+        pass
