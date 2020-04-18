@@ -4,6 +4,7 @@ from flask_cors import CORS
 db = SQLAlchemy()
 from .routes import user_blueprint
 
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
@@ -17,7 +18,7 @@ def create_app():
         app.config.get("DB_NAME"),
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+
     # Initialize plugins
     db.init_app(app)
 
@@ -28,5 +29,5 @@ def create_app():
         db.session.commit()
 
         app.register_blueprint(user_blueprint)
-        
+
         return app
