@@ -7,3 +7,5 @@ DB_DATABASE = environ.get('DB_DATABASE')
 DB_USERNAME = environ.get('DB_USERNAME')
 DB_PASSWORD = environ.get('DB_PASSWORD')
 DB_NAME = environ.get('DB_NAME')
+
+SECRET_KEY = environ.get('SECRET_KEY')
