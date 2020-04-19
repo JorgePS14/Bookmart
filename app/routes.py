@@ -3,6 +3,7 @@ from .models.user import User
 from .models.book import Book
 from .models.request import Request
 from .models.listing import Listing
+import json
 # from flask_jwt import jwt_required, current_identity
 from app import db
 
@@ -14,7 +15,8 @@ request_blueprint = Blueprint("request_blueprint", __name__)
 
 
 @user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
-def userMethods():
+@user_blueprint.route('/api/user/<int:id>', methods=['DELETE'])
+def userMethods(id=None):
     if request.method == "POST":
         user_data = request.get_json()
         user = User(
@@ -31,23 +33,23 @@ def userMethods():
         return 'OK', 200
     
     if request.method == "DELETE":
-        user_data = request.get_json()
 
-        uid = user_data['id']
-
-        delUser = User.query.filter_by(id = uid).first()
+        delUser = User.query.filter_by(id=id).first()
 
         if delUser:
             db.session.delete(delUser)
             db.session.commit()
             return 'OK', 200
 
+        print("Found nothing")
+
     message = {'Endpoint' : 'User',
                 'Description' : 'Used to register/edit/delete user in db'}
     return jsonify(message)
 
 @book_blueprint.route('/api/book', methods=['GET','POST'])
-def bookMethods():
+@ book_blueprint.route('/api/book/<int:id>', methods=['DELETE'])
+def bookMethods(id=None):
     if request.method == "POST":
         book_data = request.get_json()
         book = Book(
@@ -61,17 +63,16 @@ def bookMethods():
         db.session.commit()
         return 'OK', 200
 
-    if request.method == "DELETE":
-        book_data = request.get_json()
+    elif request.method == "DELETE":
 
-        bid = book_data['id']
-
-        delBook = Book.query.filter_by(id = bid).first()
+        delBook = Book.query.filter_by(id=id).first()
 
         if delBook:
             db.session.delete(delBook)
             db.session.commit()
             return 'OK', 200
+
+        print("Found nothing")
         
         return 'Internal Server Error', 500
 
@@ -80,15 +81,18 @@ def bookMethods():
     return jsonify(message)
 
 @listing_blueprint.route('/api/listing', methods=['GET','POST'])
-def listingMethods():
+@listing_blueprint.route('/api/listing/<int:id>', methods=['DELETE'])
+def listingMethods(id=None):
     if request.method == "POST":
-
-        photo = request.files["photo"]
-        photo = photo.read()
         listing_data = request.get_json()
 
+        #if request.files["photo"]:
+        #    photo = request.files["photo"]
+        #    photo = photo.read()
+
         listing = Listing(
-            photo,
+            #photo,
+            listing_data["photo"],
             listing_data["description"],
             int(listing_data["condition"]),
             int(listing_data["no_available"]),
@@ -100,17 +104,16 @@ def listingMethods():
         db.session.commit()
         return 'OK', 200
 
-    if request.method == "DELETE":
-        listing_data = request.get_json()
+    elif request.method == "DELETE":
 
-        lid = listing_data['id']
-
-        delListing = Listing.query.filter_by(id = lid).first()
+        delListing = Listing.query.filter_by(id=id).first()
 
         if delListing:
             db.session.delete(delListing)
             db.session.commit()
             return 'OK', 200
+
+        print("Found nothing")
         
         return 'Internal Server Error', 500
 
@@ -119,7 +122,8 @@ def listingMethods():
     return jsonify(message)
 
 @request_blueprint.route('/api/request', methods=['GET','POST'])
-def requestMethods():
+@request_blueprint.route('/api/request/<int:id>', methods=['DELETE'])
+def requestMethods(id=None):
     if request.method == "POST":
         request_data = request.get_json()
 
@@ -134,16 +138,15 @@ def requestMethods():
         return 'OK', 200
 
     if request.method == "DELETE":
-        req_data = request.get_json()
 
-        rid = req_data['id']
-
-        delRequest = User.query.filter_by(id = rid).first()
+        delRequest = Request.query.filter_by(id=id).first()
 
         if delRequest:
             db.session.delete(delRequest)
             db.session.commit()
             return 'OK', 200
+        
+        print("Found nothing")
         
         return 'Internal Server Error', 500
 
