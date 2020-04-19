@@ -2,7 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 db = SQLAlchemy()
-from .routes import user_blueprint, book_blueprint, listing_blueprint, request_blueprint, chat_blueprint
+from .routes import user_blueprint, book_blueprint, listing_blueprint, request_blueprint
+from .routes import user_blueprint, book_blueprint, listing_blueprint
 
 def create_app():
     app = Flask(__name__)
