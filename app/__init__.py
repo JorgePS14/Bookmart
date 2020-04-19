@@ -37,5 +37,5 @@ def create_app():
         app.register_blueprint(auth.auth_bp)
         app.register_blueprint(book_blueprint)
         app.register_blueprint(listing_blueprint)
-        
+
         return app
