@@ -10,7 +10,6 @@ book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 
 
-
 @user_blueprint.route('/api/user', methods=['GET', 'POST'])
 def addUser():
     if request.method == "POST":
