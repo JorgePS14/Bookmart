@@ -27,6 +27,7 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
+        from app.models import user, book, listing
         from . import auth
 
         db.create_all()
