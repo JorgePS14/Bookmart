@@ -8,6 +8,7 @@ class Book(db.Model):
     value = db.Column(db.Float)
     isbn = db.Column(db.String(20), nullable=False)
     listings = db.relationship('Listing', backref='book', lazy=True)
+    requests = db.relationship('Request', backref='book', lazy=True)
 
     def __init__(self, name, author, edition, value, isbn):
         self.name = name

@@ -11,6 +11,8 @@ class User(db.Model):
     semester = db.Column(db.Integer)
     major = db.Column(db.String(45))
     listings = db.relationship('Listing', backref='user', lazy=True)
+    requests = db.relationship('Request', backref='user', lazy=True)
+    #chats = db.relationship('UserChat', backref='user', lazy=True) //Not needed for now
 
     def __init__(self, email, password, username, location, university,
                  semester, major):

@@ -12,7 +12,7 @@ user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 request_blueprint = Blueprint("request_blueprint", __name__)
-chat_blueprint = Blueprint("chat_blueprint", __name__)
+#chat_blueprint = Blueprint("chat_blueprint", __name__) //Not needed for now
 
 @user_blueprint.route('/')
 def index():
@@ -156,12 +156,12 @@ def requestMethods():
                 'Description' : 'Used to register/edit/delete request in db'}
     return jsonify(message)
 
-@chat_blueprint.route('api/chat', methods=['GET', 'POST'])
-def createChat():
-    if request.method == "POST":
-        chat_data = request.get_json()
+##@chat_blueprint.route('api/chat', methods=['GET', 'POST'])
+##def createChat():
+    ##if request.method == "POST":
+        ##chat_data = request.get_json()
 
-        chat = Chat()
-        chat_id = chat.id
+        ##chat = Chat()
+        ##chat_id = chat.id
 
-        pass #TODO
+        ##pass      // Nothing here is needed for now
