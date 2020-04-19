@@ -2,17 +2,16 @@ from flask import request, jsonify, Blueprint
 from .models.user import User
 from .models.book import Book
 from .models.listing import Listing
+# from flask_jwt import jwt_required, current_identity
 from app import db
 
 user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 
-@user_blueprint.route('/')
-def index():
-    return "<h1>Back end</h1>"
 
-@user_blueprint.route('/api/user', methods=['GET','POST'])
+
+@user_blueprint.route('/api/user', methods=['GET', 'POST'])
 def addUser():
     if request.method == "POST":
         user = User(
@@ -27,12 +26,13 @@ def addUser():
         db.session.add(user)
         db.session.commit()
         return 'OK', 200
-    
-    message = {'Endpoint' : 'Add User',
-                'Description' : 'Used to register user in db'}
+
+    message = {'Endpoint': 'Add User',
+               'Description': 'Used to register user in db'}
     return jsonify(message)
 
-@book_blueprint.route('/api/book', methods=['GET','POST'])
+
+@book_blueprint.route('/api/book', methods=['GET', 'POST'])
 def addBook():
     if request.method == "POST":
         book = Book(
@@ -46,11 +46,12 @@ def addBook():
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint' : 'Add Book',
-                'Description' : 'Used to register book in db'}
+    message = {'Endpoint': 'Add Book',
+               'Description': 'Used to register book in db'}
     return jsonify(message)
 
-@listing_blueprint.route('/api/listing', methods=['GET','POST'])
+
+@listing_blueprint.route('/api/listing', methods=['GET', 'POST'])
 def addListing():
     if request.method == "POST":
         photo = request.files["photo"]
@@ -68,6 +69,6 @@ def addListing():
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint' : 'Add Listing',
-                'Description' : 'Used to register listing in db'}
+    message = {'Endpoint': 'Add Listing',
+               'Description': 'Used to register listing in db'}
     return jsonify(message)
