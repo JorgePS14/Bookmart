@@ -3,9 +3,7 @@ from .models.user import User
 from .models.book import Book
 from .models.request import Request
 from .models.listing import Listing
-from .models.chat import Chat
-from .models.userchat import UserChat
-from .models.message import Message
+# from flask_jwt import jwt_required, current_identity
 from app import db
 
 user_blueprint = Blueprint("user_blueprint", __name__)
@@ -14,9 +12,6 @@ listing_blueprint = Blueprint("listing_blueprint", __name__)
 request_blueprint = Blueprint("request_blueprint", __name__)
 #chat_blueprint = Blueprint("chat_blueprint", __name__) //Not needed for now
 
-@user_blueprint.route('/')
-def index():
-    return "<h1>Back end</h1>"
 
 @user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
 def userMethods():
