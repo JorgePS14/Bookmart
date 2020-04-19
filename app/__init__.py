@@ -3,7 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
-from .routes import user_blueprint
+from .routes import user_blueprint, book_blueprint, listing_blueprint
 
 
 def create_app():
@@ -35,5 +35,7 @@ def create_app():
 
         app.register_blueprint(user_blueprint)
         app.register_blueprint(auth.auth_bp)
-
+        app.register_blueprint(book_blueprint)
+        app.register_blueprint(listing_blueprint)
+        
         return app
