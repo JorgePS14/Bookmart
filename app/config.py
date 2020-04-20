@@ -9,3 +9,5 @@ DB_PASSWORD = environ.get('DB_PASSWORD')
 DB_NAME = environ.get('DB_NAME')
 
 SECRET_KEY = environ.get('SECRET_KEY')
+
+AWS_BUCKET = environ.get('AWS_BUCKET')

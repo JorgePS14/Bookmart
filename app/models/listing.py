@@ -2,7 +2,8 @@ from app import db
 
 class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    photo = db.Column(db.LargeBinary(2**32-1), nullable=False)
+    #photo = db.Column(db.LargeBinary(2**32-1))
+    photo = db.Column(db.String(200))
     description = db.Column(db.String(200), nullable=False)
     condition = db.Column(db.Integer, nullable=False)
     no_available = db.Column(db.Integer)
