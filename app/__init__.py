@@ -38,6 +38,5 @@ def create_app():
         app.register_blueprint(book_blueprint)
         app.register_blueprint(listing_blueprint)
         app.register_blueprint(request_blueprint)
-        #app.register_blueprint(chat_blueprint) //Not needed for now
         
         return app
