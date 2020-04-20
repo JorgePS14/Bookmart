@@ -99,7 +99,7 @@ def listingMethods(id=None):
             timestr = time.strftime("%Y%m%d-%H%M%S")
             name = timestr+name
             s3_client = boto3.client('s3')
-            response = s3_client.upload_fileobj(photo, environ.get("AWS_BUCKET"), name, ExtraArgs={'ACL': 'public-read'})
+            response = s3_client.upload_fileobj(photo, environ.get("AWS_BUCKET"), name, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
             photo_name = environ.get("AWS_S3_PATH")+name
 
         listing = Listing(
