@@ -3,15 +3,16 @@ from .models.user import User
 from .models.book import Book
 from .models.request import Request
 from .models.listing import Listing
-import json
+import time
+import boto3
 # from flask_jwt import jwt_required, current_identity
 from app import db
+from os import environ
 
 user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 request_blueprint = Blueprint("request_blueprint", __name__)
-#chat_blueprint = Blueprint("chat_blueprint", __name__) //Not needed for now
 
 
 @user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
@@ -84,21 +85,31 @@ def bookMethods(id=None):
 @listing_blueprint.route('/api/listing/<int:id>', methods=['DELETE'])
 def listingMethods(id=None):
     if request.method == "POST":
-        listing_data = request.get_json()
+        listing_data_description = request.form.get('description')
+        listing_data_condition = int(request.form.get('condition'))
+        listing_data_no_available = int(request.form.get('no_available'))
+        listing_data_price = float(request.form.get('price'))
+        listing_data_user_id = int(request.form.get('user_id'))
+        listing_data_book_id = int(request.form.get('book_id'))
 
-        #if request.files["photo"]:
-        #    photo = request.files["photo"]
-        #    photo = photo.read()
+        photo = request.files["photo"]
+        photo_name = None
+        if photo:
+            name = photo.filename
+            timestr = time.strftime("%Y%m%d-%H%M%S")
+            name = timestr+name
+            s3_client = boto3.client('s3')
+            response = s3_client.upload_fileobj(photo, environ.get("AWS_BUCKET"), name, ExtraArgs={'ACL': 'public-read'})
+            photo_name = environ.get("AWS_S3_PATH")+name
 
         listing = Listing(
-            #photo,
-            listing_data["photo"],
-            listing_data["description"],
-            int(listing_data["condition"]),
-            int(listing_data["no_available"]),
-            float(listing_data["price"]),
-            int(listing_data["user_id"]),
-            int(listing_data["book_id"])
+            photo_name,
+            listing_data_description,
+            listing_data_condition,
+            listing_data_no_available,
+            listing_data_price,
+            listing_data_user_id,
+            listing_data_book_id
         )
         db.session.add(listing)
         db.session.commit()
@@ -153,13 +164,3 @@ def requestMethods(id=None):
     message = {'Endpoint' : 'Add Request',
                 'Description' : 'Used to register/edit/delete request in db'}
     return jsonify(message)
-
-##@chat_blueprint.route('api/chat', methods=['GET', 'POST'])
-##def createChat():
-    ##if request.method == "POST":
-        ##chat_data = request.get_json()
-
-        ##chat = Chat()
-        ##chat_id = chat.id
-
-        ##pass      // Nothing here is needed for now
