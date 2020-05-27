@@ -82,8 +82,8 @@ def bookMethods(id=None):
     return jsonify(message)
 
 @listing_blueprint.route('/api/listing', methods=['GET','POST'])
-@listing_blueprint.route('/api/listing/<int:id>', methods=['DELETE'])
-def listingMethods(id=None):
+@listing_blueprint.route('/api/listing/<int:idNo>', methods=['DELETE'])
+def listingMethods(idNo=None):
     if request.method == "POST":
         listing_data_description = request.form.get('description')
         listing_data_condition = int(request.form.get('condition'))
@@ -117,7 +117,7 @@ def listingMethods(id=None):
 
     elif request.method == "DELETE":
 
-        delListing = Listing.query.filter_by(id=id).first()
+        delListing = Listing.query.filter_by(id=idNo).first()
 
         if delListing:
             db.session.delete(delListing)
@@ -128,13 +128,27 @@ def listingMethods(id=None):
         
         return 'Internal Server Error', 500
 
-    message = {'Endpoint' : 'Add Listing',
-                'Description' : 'Used to register/edit/delete listing in db'}
-    return jsonify(message)
+    if idNo:
+        listing = Listing.query.filter_by(id = id).first()
+        if listing:
+            return jsonify({'photo': listing.photo, 'description': listing.description, 
+                            'condition': listing.condition, 'no_available': listing.no_available,
+                            'price': listing.price, 'user_id': listing.user_id, 'book_id': listing.book_id})
+        return jsonify({'Endpoint' : 'Listing',
+                'Message' : 'The listing was not found'}), 404
+
+    listings = Listing.query.order_by(Listing.id).all()
+    print(listings)
+    response = []
+    for listing in listings:
+        response.append({'id': listing.id, 'photo': listing.photo, 'description': listing.description, 
+                            'condition': listing.condition, 'no_available': listing.no_available,
+                            'price': listing.price, 'user_id': listing.user_id, 'book_id': listing.book_id})
+    return jsonify(response), 200
 
 @request_blueprint.route('/api/request', methods=['GET','POST'])
-@request_blueprint.route('/api/request/<int:id>', methods=['DELETE'])
-def requestMethods(id=None):
+@request_blueprint.route('/api/request/<int:idNo>', methods=['DELETE', 'GET'])
+def requestMethods(idNo=None):
     if request.method == "POST":
         request_data = request.get_json()
 
@@ -150,7 +164,7 @@ def requestMethods(id=None):
 
     if request.method == "DELETE":
 
-        delRequest = Request.query.filter_by(id=id).first()
+        delRequest = Request.query.filter_by(id=idNo).first()
 
         if delRequest:
             db.session.delete(delRequest)
@@ -159,8 +173,20 @@ def requestMethods(id=None):
         
         print("Found nothing")
         
-        return 'Internal Server Error', 500
+        return 'Could not delete the book because it was not found', 404
 
-    message = {'Endpoint' : 'Add Request',
-                'Description' : 'Used to register/edit/delete request in db'}
-    return jsonify(message)
+    if idNo:
+        req = Request.query.filter_by(id = id).first()
+        if req:
+            return jsonify({'condition': req.condition, 'money': req.money, 
+                            'user_id': req.user_id, 'book_id': req.book_id})
+        return jsonify({'Endpoint' : 'Request',
+                'Message' : 'The request was not found'}), 404
+
+    reqs = Request.query.order_by(Request.id).all()
+    print(reqs)
+    response = []
+    for req in reqs:
+        response.append({'id':req.id, 'condition':req.condition, 'money':req.money,
+                        'user_id':req.user_id, 'book_id':req.book_id})
+    return jsonify(response), 200
