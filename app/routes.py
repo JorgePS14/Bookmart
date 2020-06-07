@@ -2,6 +2,7 @@ from flask import request, jsonify, Blueprint
 from .models.user import User
 from .models.book import Book
 from .models.listing import Listing
+from flask_cors import CORS, cross_origin
 # from flask_jwt import jwt_required, current_identity
 from app import db
 
@@ -10,7 +11,17 @@ book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
 
 
+@user_blueprint.route('/', methods=['GET'])
+@cross_origin()
+def f():
+    return {
+        'message': 'OK',
+        'status': 200
+    }
+
+
 @user_blueprint.route('/api/user', methods=['GET', 'POST'])
+@cross_origin()
 def addUser():
     if request.method == "POST":
         user_data = request.get_json()
