@@ -18,7 +18,22 @@ request_blueprint = Blueprint("request_blueprint", __name__)
 
 @user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
 @user_blueprint.route('/api/user/<int:id>', methods=['DELETE'])
-def userMethods(id=None):
+@user_blueprint.route('/api/user/<email>', methods=['GET'])
+def userMethods(id=None, email=None):
+    if request.method == "GET":
+        user = User.query.filter_by(email=email).first()
+        print(user.email)
+        if user:
+            return {
+                "email": user.email,
+                "username": user.username,
+                "location": user.location,
+                "university": user.university,
+                "semester": user.semester,
+                "major": user.major
+            }
+        else:
+            return {}
     if request.method == "POST":
         user_data = request.get_json()
         user = User(
