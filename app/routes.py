@@ -1,28 +1,24 @@
 from flask import request, jsonify, Blueprint
 from .models.user import User
 from .models.book import Book
+from .models.request import Request
 from .models.listing import Listing
 from flask_cors import CORS, cross_origin
+import time
+import boto3
 # from flask_jwt import jwt_required, current_identity
 from app import db
+from os import environ
 
 user_blueprint = Blueprint("user_blueprint", __name__)
 book_blueprint = Blueprint("book_blueprint", __name__)
 listing_blueprint = Blueprint("listing_blueprint", __name__)
+request_blueprint = Blueprint("request_blueprint", __name__)
 
 
-@user_blueprint.route('/', methods=['GET'])
-@cross_origin()
-def f():
-    return {
-        'message': 'OK',
-        'status': 200
-    }
-
-
-@user_blueprint.route('/api/user', methods=['GET', 'POST'])
-@cross_origin()
-def addUser():
+@user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
+@user_blueprint.route('/api/user/<int:id>', methods=['DELETE'])
+def userMethods(id=None):
     if request.method == "POST":
         user_data = request.get_json()
         user = User(
@@ -38,13 +34,25 @@ def addUser():
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint': 'Add User',
-               'Description': 'Used to register user in db'}
+    if request.method == "DELETE":
+
+        delUser = User.query.filter_by(id=id).first()
+
+        if delUser:
+            db.session.delete(delUser)
+            db.session.commit()
+            return 'OK', 200
+
+        print("Found nothing")
+
+    message = {'Endpoint' : 'User',
+                'Description' : 'Used to register/edit/delete user in db'}
     return jsonify(message)
 
 
-@book_blueprint.route('/api/book', methods=['GET', 'POST'])
-def addBook():
+@book_blueprint.route('/api/book', methods=['GET','POST'])
+@ book_blueprint.route('/api/book/<int:id>', methods=['DELETE'])
+def bookMethods(id=None):
     if request.method == "POST":
         book_data = request.get_json()
         book = Book(
@@ -58,32 +66,103 @@ def addBook():
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint': 'Add Book',
-               'Description': 'Used to register book in db'}
+    elif request.method == "DELETE":
+
+        delBook = Book.query.filter_by(id=id).first()
+
+        if delBook:
+            db.session.delete(delBook)
+            db.session.commit()
+            return 'OK', 200
+
+        print("Found nothing")
+        
+        return 'Internal Server Error', 500
+
+    message = {'Endpoint' : 'Book',
+                'Description' : 'Used to register/edit/delete book in db'}
     return jsonify(message)
 
-
-@listing_blueprint.route('/api/listing', methods=['GET', 'POST'])
-def addListing():
+@listing_blueprint.route('/api/listing', methods=['GET','POST'])
+@listing_blueprint.route('/api/listing/<int:id>', methods=['DELETE'])
+def listingMethods(id=None):
     if request.method == "POST":
+        listing_data_description = request.form.get('description')
+        listing_data_condition = int(request.form.get('condition'))
+        listing_data_no_available = int(request.form.get('no_available'))
+        listing_data_price = float(request.form.get('price'))
+        listing_data_user_id = int(request.form.get('user_id'))
+        listing_data_book_id = int(request.form.get('book_id'))
 
         photo = request.files["photo"]
-        photo = photo.read()
-        listing_data = request.get_json()
+        photo_name = None
+        if photo:
+            name = photo.filename
+            timestr = time.strftime("%Y%m%d-%H%M%S")
+            name = timestr+name
+            s3_client = boto3.client('s3')
+            response = s3_client.upload_fileobj(photo, environ.get("AWS_BUCKET"), name, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
+            photo_name = environ.get("AWS_S3_PATH")+name
 
         listing = Listing(
-            photo,
-            listing_data["description"],
-            int(listing_data["condition"]),
-            int(listing_data["no_available"]),
-            float(listing_data["price"]),
-            int(listing_data["user_id"]),
-            int(listing_data["book_id"])
+            photo_name,
+            listing_data_description,
+            listing_data_condition,
+            listing_data_no_available,
+            listing_data_price,
+            listing_data_user_id,
+            listing_data_book_id
         )
         db.session.add(listing)
         db.session.commit()
         return 'OK', 200
 
-    message = {'Endpoint': 'Add Listing',
-               'Description': 'Used to register listing in db'}
+    elif request.method == "DELETE":
+
+        delListing = Listing.query.filter_by(id=id).first()
+
+        if delListing:
+            db.session.delete(delListing)
+            db.session.commit()
+            return 'OK', 200
+
+        print("Found nothing")
+        
+        return 'Internal Server Error', 500
+
+    message = {'Endpoint' : 'Add Listing',
+                'Description' : 'Used to register/edit/delete listing in db'}
+    return jsonify(message)
+
+@request_blueprint.route('/api/request', methods=['GET','POST'])
+@request_blueprint.route('/api/request/<int:id>', methods=['DELETE'])
+def requestMethods(id=None):
+    if request.method == "POST":
+        request_data = request.get_json()
+
+        req = Request(
+            int(request_data["condition"]),
+            float(request_data["money"]),
+            int(request_data["user_id"]),
+            int(request_data["book_id"])
+        )
+        db.session.add(req)
+        db.session.commit()
+        return 'OK', 200
+
+    if request.method == "DELETE":
+
+        delRequest = Request.query.filter_by(id=id).first()
+
+        if delRequest:
+            db.session.delete(delRequest)
+            db.session.commit()
+            return 'OK', 200
+        
+        print("Found nothing")
+        
+        return 'Internal Server Error', 500
+
+    message = {'Endpoint' : 'Add Request',
+                'Description' : 'Used to register/edit/delete request in db'}
     return jsonify(message)
