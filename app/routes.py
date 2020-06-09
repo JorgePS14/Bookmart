@@ -141,7 +141,7 @@ def listingMethods(idNo=None):
     print(listings)
     response = []
     for listing in listings:
-        response.append({'id': listing.id, 'photo': listing.photo, 'description': listing.description, 
+        response.append({'id': listing.id, 'photo': str(listing.photo), 'description': listing.description, 
                             'condition': listing.condition, 'no_available': listing.no_available,
                             'price': listing.price, 'user_id': listing.user_id, 'book_id': listing.book_id})
     return jsonify(response), 200
