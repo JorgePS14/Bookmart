@@ -179,6 +179,29 @@ def listingMethods(idNo=None):
         return jsonify({'Endpoint' : 'Listing',
                 'Message' : 'The listing was not found'}), 404
 
+    if request.get_json():
+        request_data = request.get_json()
+        name = request_data["name"]
+
+        books = Book.query.filter(Book.name.contains(name)).all()
+
+        bookIds = []
+
+        for book in books:
+            bookIds.append(book.id)
+
+        response = []
+
+        for bookId in bookIds:
+            listings = Listing.query.filter_by(book_id = bookId).all()
+            if listings:
+                for listing in listings:
+                    response.append({'id': listing.id, 'photo': str(listing.photo), 'description': listing.description, 
+                                'condition': listing.condition, 'no_available': listing.no_available,
+                                'price': listing.price, 'user_id': listing.user_id, 'book_id': listing.book_id})
+        
+        return jsonify(response), 200
+
     listings = Listing.query.order_by(Listing.id).all()
     print(listings)
     response = []
