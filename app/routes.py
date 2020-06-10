@@ -250,6 +250,29 @@ def requestMethods(idNo=None):
         return jsonify({'Endpoint' : 'Request',
                 'Message' : 'The request was not found'}), 404
 
+    if request.get_json():
+        request_data = request.get_json()
+        name = request_data["name"]
+
+        books = Book.query.filter(Book.name.contains(name)).all()
+
+        bookIds = []
+
+        for book in books:
+            bookIds.append(book.id)
+
+        response = []
+
+        for bookId in bookIds:
+            requests = Request.query.filter_by(book_id = bookId).all()
+            if requests:
+                for req in requests:
+                    response.append({'id': req.id, 'condition': req.condition, 
+                        'money': req.money, 'user_id': req.user_id, 
+                        'book_id': req.book_id})
+        
+        return jsonify(response), 200
+
     reqs = Request.query.order_by(Request.id).all()
     print(reqs)
     response = []
