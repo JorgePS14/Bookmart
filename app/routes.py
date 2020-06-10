@@ -27,6 +27,7 @@ def userMethods(id=None, email=None):
             print(user.email)
             if user:
                 return {
+                    "id": user.id,
                     "email": user.email,
                     "username": user.username,
                     "location": user.location,
