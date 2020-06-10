@@ -1,6 +1,6 @@
 from datetime import timedelta
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 from .routes import user_blueprint, book_blueprint, listing_blueprint, request_blueprint
@@ -8,7 +8,7 @@ from .routes import user_blueprint, book_blueprint, listing_blueprint, request_b
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     app.config.from_pyfile('config.py')
     app.config['SQLALCHEMY_DATABASE_URI'] = '%s://%s:%s@%s/%s' % (
@@ -22,6 +22,7 @@ def create_app():
 
     app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=86400)
     app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     # Initialize plugins
     db.init_app(app)

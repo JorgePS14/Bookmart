@@ -3,6 +3,7 @@ from .models.user import User
 from app import db
 from flask import current_app as app
 from flask_jwt import JWT
+from flask_cors import CORS, cross_origin
 
 
 # Blueprint configuration
@@ -10,6 +11,7 @@ auth_bp = Blueprint('auth_bp', __name__)
 
 
 @auth_bp.route('/signup', methods=['POST'])
+@cross_origin()
 def signup():
     """POST: If form is valid, creates a user."""
     data = request.get_json()
