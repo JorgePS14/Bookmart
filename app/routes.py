@@ -3,6 +3,7 @@ from .models.user import User
 from .models.book import Book
 from .models.request import Request
 from .models.listing import Listing
+from flask_cors import CORS, cross_origin
 import time
 import boto3
 # from flask_jwt import jwt_required, current_identity
@@ -17,7 +18,22 @@ request_blueprint = Blueprint("request_blueprint", __name__)
 
 @user_blueprint.route('/api/user', methods=['GET', 'POST', 'DELETE'])
 @user_blueprint.route('/api/user/<int:id>', methods=['DELETE'])
-def userMethods(id=None):
+@user_blueprint.route('/api/user/<email>', methods=['GET'])
+def userMethods(id=None, email=None):
+    if request.method == "GET":
+        user = User.query.filter_by(email=email).first()
+        print(user.email)
+        if user:
+            return {
+                "email": user.email,
+                "username": user.username,
+                "location": user.location,
+                "university": user.university,
+                "semester": user.semester,
+                "major": user.major
+            }
+        else:
+            return {}
     if request.method == "POST":
         user_data = request.get_json()
         user = User(
@@ -32,7 +48,7 @@ def userMethods(id=None):
         db.session.add(user)
         db.session.commit()
         return 'OK', 200
-    
+
     if request.method == "DELETE":
 
         delUser = User.query.filter_by(id=id).first()
@@ -47,6 +63,7 @@ def userMethods(id=None):
     message = {'Endpoint' : 'User',
                 'Description' : 'Used to register/edit/delete user in db'}
     return jsonify(message)
+
 
 @book_blueprint.route('/api/book', methods=['GET','POST'])
 @ book_blueprint.route('/api/book/<int:id>', methods=['DELETE'])
