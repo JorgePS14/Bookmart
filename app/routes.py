@@ -65,9 +65,20 @@ def userMethods(id=None, email=None):
     return jsonify(message)
 
 
-@book_blueprint.route('/api/book', methods=['GET','POST'])
-@ book_blueprint.route('/api/book/<int:id>', methods=['DELETE'])
+@book_blueprint.route('/api/book', methods=['POST'])
+@book_blueprint.route('/api/book/<int:id>', methods=['GET'])
+@book_blueprint.route('/api/book/<int:id>', methods=['DELETE'])
 def bookMethods(id=None):
+    if request.method == "GET":
+        book = Book.query.filter_by(id=id).first()
+        return {
+            "name": book.name,
+            "author": book.author,
+            "edition": book.edition,
+            "value": book.value,
+            "isbn": book.isbn
+        }
+
     if request.method == "POST":
         book_data = request.get_json()
         book = Book(
