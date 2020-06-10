@@ -104,7 +104,9 @@ def bookMethods(id=None):
         )
         db.session.add(book)
         db.session.commit()
-        return 'OK', 200
+        db.session.refresh(book)
+        response = {"id":book.id}
+        return jsonify(response), 200
 
     elif request.method == "DELETE":
 
